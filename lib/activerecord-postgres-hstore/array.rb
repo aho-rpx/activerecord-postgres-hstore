@@ -1,12 +1,9 @@
-class Hash
+class Array
 
-  # Generates an hstore string format. This is the format used
-  # to insert or update stuff in the database.
   def to_hstore
     return "" if empty?
-
-    map { |idx, val| 
-      iv = [idx,val].map { |_| 
+    map { |val| 
+      iv = [val].map { |_| 
         e = _.to_s.gsub(/"/, '\"')
         if _.nil?
           'NULL'
@@ -17,13 +14,13 @@ class Hash
         end
       }
 
-      "%s=>%s" % iv
+      "%s=>NULL" % iv
     } * ","
   end
-
+  
+  # If the method from_hstore is called in a Hash, it just returns self.
   def from_hstore
-    puts "*"*200
-    puts "I WAS CALLED"
+    self
   end
-
+  
 end
