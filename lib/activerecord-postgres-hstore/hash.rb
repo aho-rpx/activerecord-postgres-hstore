@@ -21,9 +21,4 @@ class Hash
     } * ","
   end
 
-  def from_hstore
-    puts "*"*200
-    puts "I WAS CALLED"
-  end
-
 end

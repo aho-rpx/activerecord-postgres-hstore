@@ -18,7 +18,7 @@ class String
 
   # Creates a hash from a valid double quoted hstore format, 'cause this is the format
   # that postgresql spits out.
-  def from_hstore
+  def from_hstore        
     token_pairs = (scan(hstore_pair)).map { |k,v| [k,v =~ /^NULL$/i ? nil : v] }
     token_pairs = token_pairs.map { |k,v|
       [k,v].map { |t| 
@@ -29,10 +29,20 @@ class String
         end
       }
     }
-    Hash[ token_pairs ]
+    
+    return appropriate_format token_pairs
   end
 
   private
+  
+  # correctly return an array if all values are nil
+  def appropriate_format token_pairs
+    if token_pairs.collect(&:last).compact.empty?
+      return token_pairs.flatten.compact
+    else
+      return Hash[ token_pairs ]
+    end
+  end
 
   def hstore_pair
     quoted_string = /"[^"\\]*(?:\\.[^"\\]*)*"/
